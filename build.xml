@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="cloud-server-engine" default="war" basedir=".">
+	<tstamp></tstamp>
+	
+	<!-- Global project settings -->
+	<property name="project.name" value="Infrarch Cloud Server Engine" />
+	<property name="project.author" value="Infrarch Ltd." />
+	<property name="project.compile.include" value="**"/>
+	<path id="project.jar.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="dist">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<property name="build.id" value="1.0 (${DSTAMP})" />
+	<property name="build.compiler" value="modern" />
+
+	<!-- Source directories -->
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="web.dir" value="${basedir}/web" />
+	<property name="doc.dir" value="${basedir}/doc" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	
+	<!-- Main build directory -->
+	<property name="dist.dir" value="${basedir}/dist/${project.name} ${build.id}" />
+
+	<!-- Build sub-tree -->
+	<property name="dist.bin.dir" value="${dist.dir}/bin" />
+	<property name="dist.src.dir" value="${dist.dir}/src" />
+	<property name="dist.lib.dir" value="${dist.dir}/lib" />
+	<property name="dist.doc.dir" value="${dist.dir}/doc" />
+	<property name="dist.web.dir" value="${dist.dir}/web" />
+
+	<!-- Names of the WAR and ZIP files -->
+	<property name="dist.war.file" value="${project.name} ${build.id}.war" />
+	
+	<!-- Tomcat related variables -->
+	<property name="tomcat-path" value="C:\Program Files\Apache Software Foundation\Tomcat 8.0" />
+	
+	<!-- Path to be used for compilation -->
+	<path id="base.path">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${tomcat-path}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	
+	<!-- Display project settings -->
+	<target name="init" description="Init properties">
+		<echo message="${project.name}, build ${build.id}" />
+		<echo message="build.compiler = ${build.compiler}" />
+		<echo message="java.class.path = ${java.class.path}" />
+		<echo message="src.dir = ${src.dir}" />
+		<echo message="dist.dir = ${dist.dir}" />
+		<echo message="" />
+	</target>	
+	
+	
+	<!-- Initialize directories -->
+	<target name="clean" description="Clean/create directories" depends="init">
+
+		<!-- Delete distribution folder -->
+		<delete dir="${dist.dir}" />
+
+		<!-- Create distribution folders -->
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.bin.dir}" />
+		<mkdir dir="${dist.src.dir}" />
+		<mkdir dir="${dist.lib.dir}" />
+		<mkdir dir="${dist.doc.dir}" />
+		<mkdir dir="${dist.web.dir}" />
+	</target>
+	
+	
+	<!-- Copy files -->
+	<target name="copy" description="Copy resources and other files" depends="clean">
+
+		<!-- Copy resources / directory -->
+		<copy todir="${dist.dir}">
+			<fileset dir="${basedir}" includes="*.xml" />
+		</copy>
+		
+		<!-- Copy resources to /bin directory -->
+		<copy todir="${dist.bin.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+
+		<!-- Copy sources to /src directory -->
+		<copy todir="${dist.src.dir}">
+			<fileset dir="${src.dir}" includes="**/*.*" />
+		</copy>
+
+		<!-- Copy documentation to /doc directory -->
+		<copy todir="${dist.doc.dir}">
+			<fileset dir="${doc.dir}" includes="**/*" />
+		</copy>
+
+		<!-- Copy libraries to /lib directory -->
+		<copy todir="${dist.lib.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+		
+		<!-- Copy JSPs et al. to /web directory -->
+		<copy todir="${dist.web.dir}">
+			<fileset dir="${web.dir}" includes="**/*.*" />
+		</copy>
+	</target>
+		
+	
+	<!-- Compile the project -->
+	<target name="compile" description="Compile sources" depends="copy">
+
+		<!-- Compile the sources -->
+		<javac srcdir="${src.dir}" 
+			debug="on" deprecation="on" optimize="on" source="1.8" encoding="utf-8"
+			includes="${project.compile.include}" destdir="${dist.bin.dir}">
+			<classpath refid="base.path" />
+		</javac>
+	</target>
+	
+	
+	<!-- Create a WAR file in the main distribution folder -->
+	<target name="war" description="Create a WAR file for the project" depends="compile">
+		
+		<war destfile="${dist.dir}/cloud-server-engine.war" webxml="web.xml">
+			<fileset dir="${dist.web.dir}">
+				<include name = "**/*.*"/>
+			</fileset>
+			<lib dir="${dist.lib.dir}" />
+			<classes dir="${dist.bin.dir}" />
+		</war>
+	</target>
+</project>
