@@ -14,5 +14,5 @@ public interface Field {
 	public static final String SESSION_IP = "ip";
 	public static final String PROPERTY = "property";
 	public static final String VALUE = "value";
-	String USERS = "users";
+	public static final String USERS = "users";
 }

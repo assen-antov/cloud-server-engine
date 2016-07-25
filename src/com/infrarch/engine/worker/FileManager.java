@@ -60,7 +60,6 @@ public class FileManager implements PeriodicalTask {
 	 * @return the size on the disk
 	 */
 	public long getSizeOnDisk() {
-		logger.debug("Called getSizeOnDisk()");
 		if (lastSizeCalcTime == 0) calculateSize();
 		return sizeOnDisk;
 	}

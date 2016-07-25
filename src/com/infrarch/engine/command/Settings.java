@@ -41,7 +41,7 @@ public class Settings extends AbstractCommand {
 	public static final String DOCUMENT_ROOT = "documentRoot";
 	public static final String CONFIG_ROOT = "configurationRoot";
 	public static final String VERSION = "version";
-	public static final String COMMANDS = "supported_commands";
+	public static final String COMMANDS = "supportedCommands";
 	
 	private static final Settings instance = new Settings();
 	
