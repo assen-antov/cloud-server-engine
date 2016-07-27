@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Cloud Server Engine by assen-antov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Cloud Server Engine</h1>
+      <h2 class="project-tagline">Cloud Server Engine is a file server implemented as Java servlet. It works over HTTP and in response to POST and GET requests performs operations on server&#39;s file system and returns directory listings, file data, etc. in JSON format. </h2>
+      <a href="https://github.com/assen-antov/cloud-server-engine" class="btn">View on GitHub</a>
+      <a href="https://github.com/assen-antov/cloud-server-engine/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/assen-antov/cloud-server-engine/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started</h2>
+
+<p>The project includes an Ant build file, which produces a web application archive named <code>cloud-server-engine.war</code>. The WAR file must be deployed to a Java servlet container (e.g. Apache Tomcat) like any other Java web application. The servlet is mapped to (the case sensitive) paths <code>engine</code> and <code>Engine</code>. When sending requests to the server the <code>command</code> parameter must always be present, followed by parameters specific for the command being sent to the server.</p>
+
+<p>For example, to obtain the contents of the root directory of the file server the following request must be sent:</p>
+
+<pre><code>https://localhost/cloud-server-engine/Engine?command=list_contents&amp;dir=/
+</code></pre>
+
+<p>All commands will return a JSON formatted response with MIME type <code>text/html</code>, except for the <code>download</code> command which will return the requested file in <code>application/octet-stream</code>. So the result from a directory listing request will look something like:</p>
+
+<pre><code>{
+  "directories": [
+    {
+      "name": "abc",
+      "relativePath": "/abc",
+      "lastModified": 1469281107663,
+      "hasSubdirs": false
+    },
+    {
+      "name": "new dir",
+      "relativePath": "/new dir",
+      "lastModified": 1469253560790,
+      "hasSubdirs": false
+    }
+  ],
+  "files": [
+    {
+      "name": "cloud-server-engine.war",
+      "lastModified": 1469205786720,
+      "size": 28274461,
+      "hidden": false,
+      "canRead": true,
+      "canWrite": true
+    },
+    {
+      "name": "Infrarch Report Template.pdf",
+      "lastModified": 1463293088505,
+      "size": 132995,
+      "hidden": false,
+      "canRead": true,
+      "canWrite": true
+    },
+    {
+      "name": "web.xml",
+      "lastModified": 1469199990879,
+      "size": 1075,
+      "hidden": false,
+      "canRead": true,
+      "canWrite": true
+    }
+  ],
+  "resultCode": 0,
+  "resultMessage": "OK",
+  "query": {
+    "loggedUserName": "admin",
+    "ip": "localhost",
+    "command": "list_contents",
+    "dir": "%2F"
+  },
+  "processingTime": 6
+}
+</code></pre>
+
+<p>Server responses will always include a <code>resultCode</code>, a human readable <code>resultMessage</code>, the <code>processingTime</code> in milliseconds and the contents of the original <code>query</code> (including information about the <code>loggedUserName</code> and user's <code>ip</code>). The <code>query</code> parameter will only be missing when responding to requests which include passwords (e.g. <code>login</code>, <code>add_user</code>, <code>change_password</code> and similar commands).</p>
+
+<h2>
+<a id="operating-the-server" class="anchor" href="#operating-the-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Operating the server</h2>
+
+<p>For operating the server you may use any tool that is capable of performing HTTP GET/POST with the request. For example, in Java Script and using jQuery the server may be called with code like the following:</p>
+
+<pre><code>$.post("cloud-server-engine/Engine", {command: "list_dir", dir: "/"}, 
+    function (result) {
+        var data = JSON.parse(result);
+        if (data.resultCode != 0) {      // 0 - OK
+            // handle error
+        }
+
+        // do what is required, for example print a list of the directories found:
+        for (var i = 0; i &lt; data.directories.length; i++) {
+            var html = 
+                "&lt;a href='?dir=" + data.directories[i].relativePath + "'&gt;" + data.directories[i].name + "&lt;/a&gt;" + " " + 
+                new Date(data.directories[i].lastModified).toLocaleString();
+        }
+        container.innerHTML = html;  // set the contents of listing's container (e.g. a DIV)
+    }
+);
+</code></pre>
+
+<p>The use of JSON for server responses makes writing client applications in Java Script a convenient and straightforward task.</p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p>Details about Cloud Server Engine may be found in <a href="https://github.com/assen-antov/cloud-server-engine/wiki">project's Wiki</a> pages.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/assen-antov/cloud-server-engine">Cloud Server Engine</a> is maintained by <a href="https://github.com/assen-antov">assen-antov</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
