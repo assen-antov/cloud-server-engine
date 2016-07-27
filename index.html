@@ -99,8 +99,9 @@
         }
 
         // do what is required, for example print a list of the directories found:
+        var html;
         for (var i = 0; i &lt; data.directories.length; i++) {
-            var html = 
+            html += 
                 "&lt;a href='?dir=" + data.directories[i].relativePath + "'&gt;" + data.directories[i].name + "&lt;/a&gt;" + " " + 
                 new Date(data.directories[i].lastModified).toLocaleString();
         }
