@@ -1,6 +1,9 @@
 # cloud-server-engine
 A file server implemented as Java servlet. In response to HTTP POST and GET requests returns directory listings, file data, etc. as JSON.<br>   
-Supports the following commands:<br><br>
+Clients are easy to build especially in JavaScript. The following example client has about 150 lines of JavaScript, out of which only about 40 are related to processing server's reponses:<br>
+![Simple client demo](https://raw.githubusercontent.com/assen-antov/cloud-server-engine/master/doc/engine-client.png)<br>
+<br>
+The server supports the following commands:<br><br>
 <strong>add_user</strong> adds a new user<br>
 <strong>change_pass</strong> changes the password of a user<br>
 <strong>copy_file</strong> copies a file<br>
