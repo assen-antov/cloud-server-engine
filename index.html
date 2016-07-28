@@ -103,7 +103,7 @@
         for (var i = 0; i &lt; data.directories.length; i++) {
             html += 
                 "&lt;a href='?dir=" + data.directories[i].relativePath + "'&gt;" + data.directories[i].name + "&lt;/a&gt;" + " " + 
-                new Date(data.directories[i].lastModified).toLocaleString();
+                new Date(data.directories[i].lastModified).toLocaleString() + "&lt;br&gt;";
         }
         container.innerHTML = html;  // set the contents of listing's container (e.g. a DIV)
     }
